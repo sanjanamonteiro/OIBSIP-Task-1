@@ -1,0 +1,42 @@
+"""
+Iris Flower Classification using Random Forest
+
+This script demonstrates how to classify iris species using the Random Forest algorithm.
+It performs the following steps:
+- Loads and preprocesses the Iris dataset
+- Encodes species labels numerically
+- Splits data into training and testing sets
+- Trains a RandomForestClassifier
+- Evaluates the model and prints accuracy and a detailed classification report
+- Outputs actual vs. predicted values for the test set
+
+Requirements:
+- pandas
+- scikit-learn
+
+Dataset reference: https://archive.ics.uci.edu/ml/datasets/iris
+"""
+import pandas as pd  
+from sklearn.model_selection import train_test_split  
+from sklearn.preprocessing import LabelEncoder  
+from sklearn.ensemble import RandomForestClassifier  
+from sklearn.metrics import classification_report, accuracy_score  
+  
+  
+data = pd.read_csv('Iris.csv')  
+if 'Id' in data.columns:  
+    data = data.drop('Id', axis=1)  
+le = LabelEncoder()  
+data['Species'] = le.fit_transform(data['Species'])  
+X = data.drop('Species', axis=1)  
+y = data['Species'] 
+X_train, X_test, y_train, y_test = train_test_split(  
+    X, y, test_size=0.2, random_state=42  
+) 
+clf = RandomForestClassifier(n_estimators=100, random_state=42)  
+clf.fit(X_train, y_train) 
+y_pred = clf.predict(X_test) 
+print("Accuracy:", accuracy_score(y_test, y_pred))  
+print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=le.classes_))  
+for actual, predicted in zip(y_test, y_pred):
+    print(f"Actual: {actual}, Predicted: {predicted}")
