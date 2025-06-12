@@ -40,3 +40,97 @@ print("Accuracy:", accuracy_score(y_test, y_pred))
 print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=le.classes_))  
 for actual, predicted in zip(y_test, y_pred):
     print(f"Actual: {actual}, Predicted: {predicted}")
+
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+# Load dataset
+df = pd.read_csv("/content/Iris.csv")
+
+# Show first few rows
+print(df.head())
+print(df.info())
+print(df.describe())
+print(df['Species'].value_counts())
+
+# Visualize the data
+sns.pairplot(df, hue='Species')
+plt.show()
+
+# Check for missing values
+print(df.isnull().sum())
+
+# Check column names
+print("Column Names:", df.columns)
+
+# Drop 'Id' column only if it exists
+if 'Id' in df.columns:
+    df.drop('Id', axis=1, inplace=True)
+
+# Encode species into numbers
+le = LabelEncoder()
+df['Species'] = le.fit_transform(df['Species'])
+
+# Features and labels
+X = df.drop('Species', axis=1)
+y = df['Species']
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train model
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# Predictions and evaluation
+y_pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print("Classification Report:\n", classification_report(y_test, y_pred))
+for actual, predicted in zip(y_test, y_pred):
+    print(f"Actual: {actual}, Predicted: {predicted}")
+
+    
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm, annot=True, cmap='Blues', fmt='d', xticklabels=le.classes_, yticklabels=le.classes_)
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Confusion Matrix")
+plt.show()
+# Split into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a Random Forest Classifier
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
